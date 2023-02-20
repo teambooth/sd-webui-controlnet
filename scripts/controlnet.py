@@ -464,15 +464,19 @@ class Script(scripts.Script):
         if input_image is not None:
             input_image = HWC3(np.asarray(input_image))
         elif image is not None:
-            img = base64.b64decode(image['image'])
-            buf = io.BytesIO(img)
-            img = Image.open(buf)
-            input_image = HWC3(np.asarray(img))
+            input_image = None
+            if type(image["image"]) == np.ndarray:
+                input_image = image["image"]
+            else:
+                img = base64.b64decode(image['image'])
+                buf = io.BytesIO(img)
+                img = Image.open(buf)
+                input_image = HWC3(np.asarray(img))
 
-            mask_img = base64.b64decode(image['mask'])
-            buf = io.BytesIO(mask_img)
-            mask_img = Image.open(buf)
-            image['mask'] = HWC3(np.asarray(mask_img)) 
+                mask_img = base64.b64decode(image['mask'])
+                buf = io.BytesIO(mask_img)
+                mask_img = Image.open(buf)
+                image['mask'] = HWC3(np.asarray(mask_img)) 
             if not ((image['mask'][:, :, 0]==0).all() or (image['mask'][:, :, 0]==255).all()):
                 print("using mask as input")
                 input_image = HWC3(image['mask'][:, :, 0])
