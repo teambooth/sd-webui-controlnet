@@ -473,7 +473,6 @@ class Script(scripts.Script):
             buf = io.BytesIO(mask_img)
             mask_img = Image.open(buf)
             image['mask'] = HWC3(np.asarray(mask_img)) 
-            input_image = HWC3(image['image'])
             if not ((image['mask'][:, :, 0]==0).all() or (image['mask'][:, :, 0]==255).all()):
                 print("using mask as input")
                 input_image = HWC3(image['mask'][:, :, 0])
